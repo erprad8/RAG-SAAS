@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680" width="960" height="680" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#00000022"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="680" fill="#f8fafc" rx="12"/>
+
+  <!-- Title -->
+  <text x="480" y="38" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">RAG-Based Question Answering System — Architecture</text>
+  <text x="480" y="58" text-anchor="middle" font-size="13" fill="#64748b">Author: Pradeep Kumar Verma</text>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- UPLOAD FLOW — top half -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <!-- Section label: Upload Flow -->
+  <rect x="30" y="78" width="900" height="270" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="50" y="100" font-size="12" font-weight="bold" fill="#1d4ed8">DOCUMENT INGESTION FLOW</text>
+
+  <!-- Client -->
+  <rect x="50" y="115" width="110" height="60" rx="8" fill="#1e40af" filter="url(#shadow)"/>
+  <text x="105" y="141" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Client</text>
+  <text x="105" y="158" text-anchor="middle" font-size="11" fill="#bfdbfe">curl / Browser</text>
+
+  <!-- Arrow: Client → FastAPI -->
+  <line x1="162" y1="145" x2="218" y2="145" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="190" y="138" text-anchor="middle" font-size="10" fill="#475569">POST</text>
+  <text x="190" y="150" text-anchor="middle" font-size="10" fill="#475569">/upload</text>
+
+  <!-- FastAPI Router -->
+  <rect x="220" y="115" width="120" height="60" rx="8" fill="#0f766e" filter="url(#shadow)"/>
+  <text x="280" y="141" text-anchor="middle" font-size="13" fill="white" font-weight="bold">FastAPI</text>
+  <text x="280" y="158" text-anchor="middle" font-size="11" fill="#99f6e4">Router</text>
+
+  <!-- Arrow: FastAPI → 202 back to client (dashed) -->
+  <line x1="220" y1="160" x2="162" y2="168" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="185" y="178" text-anchor="middle" font-size="10" fill="#475569">202 Accepted</text>
+
+  <!-- Arrow: FastAPI → Background Job -->
+  <line x1="340" y1="145" x2="398" y2="145" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="370" y="138" text-anchor="middle" font-size="10" fill="#475569">submit</text>
+  <text x="370" y="150" text-anchor="middle" font-size="10" fill="#475569">job</text>
+
+  <!-- Background Job -->
+  <rect x="400" y="108" width="130" height="75" rx="8" fill="#7c3aed" filter="url(#shadow)"/>
+  <text x="465" y="134" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Background Job</text>
+  <text x="465" y="151" text-anchor="middle" font-size="11" fill="#ddd6fe">ThreadPoolExecutor</text>
+  <text x="465" y="168" text-anchor="middle" font-size="10" fill="#c4b5fd">max_workers=4</text>
+
+  <!-- Ingestion Pipeline Box -->
+  <rect x="560" y="95" width="350" height="240" rx="8" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+  <text x="735" y="115" text-anchor="middle" font-size="12" font-weight="bold" fill="#713f12">INGESTION PIPELINE</text>
+
+  <!-- Arrow: Background Job → Parser -->
+  <line x1="530" y1="145" x2="578" y2="145" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+  <!-- Step 1: Parser -->
+  <rect x="580" y="125" width="130" height="50" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="645" y="147" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">① Parser</text>
+  <text x="645" y="163" text-anchor="middle" font-size="10" fill="#64748b">PDF · TXT → text blocks</text>
+
+  <!-- Arrow: Parser → Chunker -->
+  <line x1="710" y1="150" x2="748" y2="150" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 2: Chunker -->
+  <rect x="750" y="125" width="140" height="50" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="820" y="147" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">② Chunker</text>
+  <text x="820" y="163" text-anchor="middle" font-size="10" fill="#64748b">512-token sliding window</text>
+
+  <!-- Arrow: Chunker → Embedder -->
+  <line x1="820" y1="175" x2="820" y2="205" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 3: Embedding -->
+  <rect x="750" y="207" width="140" height="50" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="820" y="229" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">③ Embedder</text>
+  <text x="820" y="245" text-anchor="middle" font-size="10" fill="#64748b">MiniLM-L6-v2 384-dim</text>
+
+  <!-- Arrow: Embedder → FAISS -->
+  <line x1="750" y1="232" x2="712" y2="232" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 4: FAISS Index -->
+  <rect x="580" y="207" width="130" height="50" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="645" y="229" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">④ FAISS Index</text>
+  <text x="645" y="245" text-anchor="middle" font-size="10" fill="#64748b">IndexFlatIP + Metadata</text>
+
+  <!-- Arrow: FAISS → Disk -->
+  <line x1="645" y1="257" x2="645" y2="285" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <rect x="580" y="286" width="130" height="35" rx="5" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="645" y="305" text-anchor="middle" font-size="11" fill="#475569">💾 Disk Persistence</text>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- QUERY FLOW — bottom half -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <rect x="30" y="365" width="900" height="285" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <text x="50" y="387" font-size="12" font-weight="bold" fill="#15803d">QUERY (QA) FLOW</text>
+
+  <!-- Client 2 -->
+  <rect x="50" y="400" width="110" height="60" rx="8" fill="#1e40af" filter="url(#shadow)"/>
+  <text x="105" y="426" text-anchor="middle" font-size="13" fill="white" font-weight="bold">Client</text>
+  <text x="105" y="443" text-anchor="middle" font-size="11" fill="#bfdbfe">curl / Browser</text>
+
+  <!-- Arrow: Client → FastAPI Query -->
+  <line x1="162" y1="430" x2="218" y2="430" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="190" y="423" text-anchor="middle" font-size="10" fill="#16a34a">POST</text>
+  <text x="190" y="435" text-anchor="middle" font-size="10" fill="#16a34a">/ask</text>
+
+  <!-- FastAPI Query Router -->
+  <rect x="220" y="400" width="120" height="60" rx="8" fill="#0f766e" filter="url(#shadow)"/>
+  <text x="280" y="426" text-anchor="middle" font-size="13" fill="white" font-weight="bold">FastAPI</text>
+  <text x="280" y="443" text-anchor="middle" font-size="11" fill="#99f6e4">Query Router</text>
+
+  <!-- Arrow: → Query Embedder -->
+  <line x1="340" y1="430" x2="398" y2="430" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Query Embedder -->
+  <rect x="400" y="407" width="130" height="47" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="465" y="427" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">Query Embed</text>
+  <text x="465" y="443" text-anchor="middle" font-size="10" fill="#64748b">MiniLM → 384-dim vec</text>
+
+  <!-- Arrow: → FAISS Search -->
+  <line x1="530" y1="430" x2="578" y2="430" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- FAISS Search -->
+  <rect x="580" y="407" width="130" height="47" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="645" y="427" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">FAISS Search</text>
+  <text x="645" y="443" text-anchor="middle" font-size="10" fill="#64748b">Top-K cosine similarity</text>
+
+  <!-- Arrow: → LLM Service -->
+  <line x1="710" y1="430" x2="758" y2="430" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- LLM Service -->
+  <rect x="760" y="407" width="130" height="47" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="825" y="427" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">LLM Service</text>
+  <text x="825" y="443" text-anchor="middle" font-size="10" fill="#64748b">Claude Haiku</text>
+
+  <!-- Arrow: LLM → Anthropic API -->
+  <line x1="825" y1="454" x2="825" y2="490" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="760" y="492" width="130" height="40" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="825" y="510" text-anchor="middle" font-size="11" font-weight="bold" fill="#92400e">Anthropic API</text>
+  <text x="825" y="525" text-anchor="middle" font-size="10" fill="#92400e">claude-3-haiku</text>
+
+  <!-- Arrow: Answer back to Client -->
+  <line x1="760" y1="430" x2="162" y2="520" stroke="#16a34a" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow-green)"/>
+  <text x="400" y="510" text-anchor="middle" font-size="11" fill="#15803d" font-weight="bold">← JSON Response (answer + chunks + latency + similarity scores)</text>
+
+  <!-- Metrics Box -->
+  <rect x="50" y="555" width="660" height="75" rx="8" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1.5"/>
+  <text x="70" y="575" font-size="12" font-weight="bold" fill="#6b21a8">METRICS TRACKED</text>
+  <text x="70" y="595" font-size="11" fill="#4c1d95">① Retrieval Latency (ms)  —  isolates FAISS search time from LLM time</text>
+  <text x="70" y="612" font-size="11" fill="#4c1d95">② Avg Cosine Similarity Score  —  flags low-confidence retrievals (&lt;0.3 = retrieval failure)</text>
+  <text x="70" y="629" font-size="11" fill="#4c1d95">③ Retrieval Failure Rate  —  fraction of queries returning 0 chunks above threshold</text>
+
+  <!-- Rate Limiting note -->
+  <rect x="730" y="555" width="200" height="75" rx="8" fill="#fff1f2" stroke="#fecdd3" stroke-width="1.5"/>
+  <text x="830" y="575" text-anchor="middle" font-size="12" font-weight="bold" fill="#9f1239">RATE LIMITS</text>
+  <text x="830" y="595" text-anchor="middle" font-size="11" fill="#881337">Upload: 10 / min / IP</text>
+  <text x="830" y="612" text-anchor="middle" font-size="11" fill="#881337">Query: 30 / min / IP</text>
+  <text x="830" y="629" text-anchor="middle" font-size="11" fill="#881337">via slowapi</text>
+</svg>
